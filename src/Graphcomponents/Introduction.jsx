@@ -2,7 +2,6 @@ import { Box, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { ResponsiveSunburst } from "@nivo/sunburst";
 import { useEffect, useMemo, useState } from "react";
-import WorkerBuilder from "../calcWorkers/WorkerBuilder.jsx";
 import useFeedbackMachine from "../FeedbackMachine/useFeedbackMachine";
 
 /**
@@ -15,7 +14,7 @@ import useFeedbackMachine from "../FeedbackMachine/useFeedbackMachine";
 function Introduction({ chatData, chatDataWithoutMedia }) {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
     const worker = useMemo(
-        () => new WorkerBuilder("../calcWorkers/Introduction.worker.jsx", import.meta.url),
+        () => new Worker(new URL("../calcWorkers/Introduction.worker.jsx", import.meta.url), {type: "module"}),
         []
     );
 

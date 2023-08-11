@@ -1,30 +1,22 @@
+import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import {
-    Box,
-    Typography,
-    Paper,
-    Stepper,
-    Step,
-    StepLabel,
-    StepContent,
-    Button,
-    Chip,
+    Box, Button,
+    Chip, Paper, Step, StepContent, StepLabel, Stepper, Typography
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { MuiFileInput } from "mui-file-input";
 import { useEffect, useMemo, useState } from "react";
+import useFeedbackMachine from "./FeedbackMachine/useFeedbackMachine";
 import Introduction from "./Graphcomponents/Introduction";
 import LongestMessage from "./Graphcomponents/LongestMessage";
 import MessagesOverDay from "./Graphcomponents/MessagesOverDay";
 import MessagesOverWeek from "./Graphcomponents/MessagesOverWeek";
 import TopWordsUsed from "./Graphcomponents/TopWordsUsed";
-import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
-import WorkerBuilder from "./calcWorkers/WorkerBuilder";
-import useFeedbackMachine from "./FeedbackMachine/useFeedbackMachine";
 
 function App() {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
     const worker = useMemo(
-        () => new WorkerBuilder("./calcWorkers/ConvertTxtToChat.worker.jsx", import.meta.url),
+        () => new Worker(new URL("./calcWorkers/ConvertTxtToChat.worker.jsx", import.meta.url), {type: "module"}),
         []
     );
 
