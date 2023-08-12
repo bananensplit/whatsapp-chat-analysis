@@ -1,12 +1,20 @@
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import {
-    Box, Button,
-    Chip, Paper, Step, StepContent, StepLabel, Stepper, Typography
+    Box,
+    Button,
+    Chip,
+    Paper,
+    Step,
+    StepContent,
+    StepLabel,
+    Stepper,
+    Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { MuiFileInput } from "mui-file-input";
 import { useEffect, useMemo, useState } from "react";
 import useFeedbackMachine from "./FeedbackMachine/useFeedbackMachine";
+import TopCharactersUsed from "./Graphcomponents/TopCharactersUsed";
 import Introduction from "./Graphcomponents/Introduction";
 import LongestMessage from "./Graphcomponents/LongestMessage";
 import MessagesOverDay from "./Graphcomponents/MessagesOverDay";
@@ -16,20 +24,27 @@ import TopWordsUsed from "./Graphcomponents/TopWordsUsed";
 function App() {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
     const worker = useMemo(
-        () => new Worker(new URL("./calcWorkers/ConvertTxtToChat.worker.jsx", import.meta.url), {type: "module"}),
+        () =>
+            new Worker(new URL("./calcWorkers/ConvertTxtToChat.worker.jsx", import.meta.url), {
+                type: "module",
+            }),
         []
     );
 
     const [chatData, setChatData] = useState("");
     const [chatDataWithoutMedia, setChatDataWithoutMedia] = useState("");
-    const [file, setFile] = useState(null);
+    // const [file, setFile] = useState(null);
+    const [file, setFile] = useState("null");
+
+    useEffect(() => runAnalysis(), []);
 
     function runAnalysis() {
         if (file === null) return;
         setLoading(true);
         // console.log("runAnalysis");
-        // fetch("tempdata.txt").then((r) => r.text())
-        file.text()
+        fetch("tempdata.txt")
+            .then((r) => r.text())
+            // file.text()
             .then((text) => worker.postMessage(text))
             .catch((error) => console.error(error));
     }
@@ -70,8 +85,8 @@ function App() {
                     <Typography variant="h1" gutterBottom>
                         📈 WhatsApp Chat Analysis
                     </Typography>
-                    
-                    <Chip sx={{mb: "20px"}} label="BETA VERSION" color="primary" />
+
+                    <Chip sx={{ mb: "20px" }} label="BETA VERSION" color="primary" />
 
                     <Grid container spacing={2} sx={{ width: "100%" }}>
                         <Grid xs={12} md={6}>
@@ -175,6 +190,10 @@ function App() {
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
                         <TopWordsUsed
+                            chatData={chatData}
+                            chatDataWithoutMedia={chatDataWithoutMedia}
+                        />
+                        <TopCharactersUsed
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />

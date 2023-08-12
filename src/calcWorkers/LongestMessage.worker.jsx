@@ -17,9 +17,6 @@ self.onmessage = (message) => {
         )
         .inflate();
 
-    console.log(longestMessagesBySender.toString());
-    console.log(longestMessagesBySender.toArray());
-
     self.postMessage({
         senders: senders.toArray(),
         longestMessagesBySender: longestMessagesBySender.transformSeries({
