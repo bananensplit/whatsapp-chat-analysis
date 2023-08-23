@@ -1,12 +1,12 @@
 import * as dataForge from "data-forge";
 import moment from "moment";
 
-self.onmessage = (message) => {
-    const start = performance.now();
-    const chatDataWithoutMedia = dataForge.fromJSON(message.data).transformSeries({
-        datetime: (datetime) => moment(datetime),
-    });
-
+/**
+ * Calculates the top 50 characters used in the chat and the determines the number of usages by each sender.
+ * @param {import("data-forge").DataFrame} chatDataWithoutMedia
+ * @returns
+ */
+function workerExecute(chatDataWithoutMedia) {
     const senders = chatDataWithoutMedia.getSeries("sender").distinct();
 
     const charCounts = chatDataWithoutMedia
@@ -22,7 +22,7 @@ self.onmessage = (message) => {
                     count: group.count(),
                 }))
                 .inflate()
-                .bake()
+                .bake(),
         }))
         .inflate()
         .reduce(
@@ -42,23 +42,34 @@ self.onmessage = (message) => {
             null
         )
         .generateSeries((row) => ({
-                totalCount: Object.keys(row)
-                    .filter((key) => key !== "char")
-                    .map((sender) => row[sender])
-                    .reduce((a, b) => a + b, 0),
+            totalCount: Object.keys(row)
+                .filter((key) => key !== "char")
+                .map((sender) => row[sender])
+                .reduce((a, b) => a + b, 0),
         }))
-        .orderBy(row => row.totalCount)
+        .orderBy((row) => row.totalCount)
         .tail(50);
 
-    console.log("charCounts");
-    console.log(charCounts.toArray());
-    console.log(charCounts.toString());
+    return {
+        senders: senders.toArray(),
+        charCounts: charCounts.toArray(),
+    };
+}
 
+self.onmessage = (message) => {
+    const start = performance.now();
+
+    const chatDataWithoutMedia = dataForge
+        .fromJSON(message.data.chatDataWithoutMedia)
+        .transformSeries({
+            datetime: (datetime) => moment(datetime),
+        });
+
+    const result = workerExecute(chatDataWithoutMedia);
     const end = performance.now();
 
     self.postMessage({
-        senders: senders.toArray(),
-        charCounts: charCounts.toArray(),
+        ...result,
         time: end - start,
     });
 };

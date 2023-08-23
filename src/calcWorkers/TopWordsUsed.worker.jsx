@@ -1,11 +1,12 @@
 import * as dataForge from "data-forge";
 import moment from "moment";
 
-self.onmessage = (message) => {
-    const chatDataWithoutMedia = dataForge.fromJSON(message.data).transformSeries({
-        datetime: (datetime) => moment(datetime),
-    });
-
+/**
+ * Calculates the top 100 words used in the chat and the determines the number of usages by each sender.
+ * @param {import("data-forge").DataFrame} chatDataWithoutMedia
+ * @returns
+ */
+function workerExecute(chatDataWithoutMedia) {
     const senders = chatDataWithoutMedia.getSeries("sender").distinct();
 
     const wordsBySender = chatDataWithoutMedia
@@ -52,7 +53,28 @@ self.onmessage = (message) => {
             ),
         }));
 
-    self.postMessage({ senders: senders.toArray(), wordCounts: wordCounts.toArray() });
+    return {
+        senders: senders.toArray(),
+        wordCounts: wordCounts.toArray(),
+    };
+}
+
+self.onmessage = (message) => {
+    const start = performance.now();
+
+    const chatDataWithoutMedia = dataForge
+        .fromJSON(message.data.chatDataWithoutMedia)
+        .transformSeries({
+            datetime: (datetime) => moment(datetime),
+        });
+
+    const result = workerExecute(chatDataWithoutMedia);
+    const end = performance.now();
+
+    self.postMessage({
+        ...result,
+        time: end - start,
+    });
 };
 
 export {};

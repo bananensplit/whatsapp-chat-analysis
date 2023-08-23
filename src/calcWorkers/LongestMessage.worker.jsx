@@ -1,11 +1,12 @@
 import * as dataForge from "data-forge";
 import moment from "moment";
 
-self.onmessage = (message) => {
-    const chatDataWithoutMedia = dataForge.fromJSON(message.data).transformSeries({
-        datetime: (datetime) => moment(datetime),
-    });
-
+/**
+ * Calculates the longest message for each sender.
+ * @param {import("data-forge").DataFrame} chatDataWithoutMedia 
+ * @returns 
+ */
+function workerExecute(chatDataWithoutMedia) {
     const senders = chatDataWithoutMedia.getSeries("sender").distinct();
 
     const longestMessagesBySender = chatDataWithoutMedia
@@ -17,11 +18,31 @@ self.onmessage = (message) => {
         )
         .inflate();
 
-    self.postMessage({
+    return {
         senders: senders.toArray(),
-        longestMessagesBySender: longestMessagesBySender.transformSeries({
-            datetime: (datetime) => datetime.format(),
-        }).toArray(),
+        longestMessagesBySender: longestMessagesBySender
+            .transformSeries({
+                datetime: (datetime) => datetime.format(),
+            })
+            .toArray(),
+    };
+}
+
+self.onmessage = (message) => {
+    const start = performance.now();
+
+    const chatDataWithoutMedia = dataForge
+        .fromJSON(message.data.chatDataWithoutMedia)
+        .transformSeries({
+            datetime: (datetime) => moment(datetime),
+        });
+
+    const result = workerExecute(chatDataWithoutMedia);
+    const end = performance.now();
+
+    self.postMessage({
+        ...result,
+        time: end - start,
     });
 };
 

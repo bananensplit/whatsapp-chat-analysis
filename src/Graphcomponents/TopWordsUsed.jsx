@@ -24,7 +24,7 @@ function TopWordsUsed({ chatData, chatDataWithoutMedia }) {
     useEffect(() => {
         if (chatDataWithoutMedia !== "") {
             setLoading(true);
-            worker.postMessage(chatDataWithoutMedia);
+            worker.postMessage({chatDataWithoutMedia});
         }
     }, [chatDataWithoutMedia]);
 

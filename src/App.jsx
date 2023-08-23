@@ -174,7 +174,7 @@ function App() {
                 </Box>
                 {chatData && chatDataWithoutMedia && (
                     <>
-                        {/* <Introduction
+                        <Introduction
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
@@ -197,7 +197,7 @@ function App() {
                         <TopCharactersUsed
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
-                        /> */}
+                        />
                         <TopEmojisUsed
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}

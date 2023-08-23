@@ -1,17 +1,14 @@
 import * as dataForge from "data-forge";
 import moment from "moment";
 
-self.onmessage = (message) => {
+/**
+ * Calculates the number of messages, words and characters for each sender.
+ * @param {import("data-forge").DataFrame} chatData 
+ * @param {import("data-forge").DataFrame} chatDataWithoutMedia 
+ * @returns 
+ */
+function workerExecute(chatData, chatDataWithoutMedia) {
     const mediaExcludedPhrase = ["<Medien ausgeschlossen>", "<Media omitted>"];
-
-    const chatData = dataForge.fromJSON(message.data.chatData).transformSeries({
-        datetime: (datetime) => moment(datetime),
-    });
-    const chatDataWithoutMedia = dataForge
-        .fromJSON(message.data.chatDataWithoutMedia)
-        .transformSeries({
-            datetime: (datetime) => moment(datetime),
-        });
 
     const senders = chatData.getSeries("sender").distinct().toArray();
 
@@ -64,11 +61,32 @@ self.onmessage = (message) => {
         })),
     };
 
-    self.postMessage({
+    return {
         senders: senders,
         messageCounts: messageCounts,
         wordCounts: wordCounts,
         charCounts: charCounts,
+    };
+}
+
+self.onmessage = (message) => {
+    const start = performance.now();
+
+    const chatData = dataForge.fromJSON(message.data.chatData).transformSeries({
+        datetime: (datetime) => moment(datetime),
+    });
+    const chatDataWithoutMedia = dataForge
+        .fromJSON(message.data.chatDataWithoutMedia)
+        .transformSeries({
+            datetime: (datetime) => moment(datetime),
+        });
+
+    const result = workerExecute(chatData, chatDataWithoutMedia);
+    const end = performance.now();
+
+    self.postMessage({
+        ...result,
+        time: end - start,
     });
 };
 

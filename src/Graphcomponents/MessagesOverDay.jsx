@@ -23,7 +23,7 @@ function MessagesOverDay({ chatData, chatDataWithoutMedia }) {
     useEffect(() => {
         if (chatData !== "") {
             setLoading(true);
-            worker.postMessage(chatData);
+            worker.postMessage({chatData});
         }
     }, [chatData]);
 

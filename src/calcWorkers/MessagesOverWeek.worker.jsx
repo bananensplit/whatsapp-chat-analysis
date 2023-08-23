@@ -1,13 +1,13 @@
 import * as dataForge from "data-forge";
 import moment from "moment";
 
-self.onmessage = (message) => {
+/**
+ * Calculates the number of messages for each sender for each day of the week.
+ * @param {import("data-forge").DataFrame} chatData 
+ * @returns 
+ */
+function workerExecute(chatData) {
     const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
-    const chatData = dataForge.fromJSON(message.data).transformSeries({
-        datetime: (datetime) => moment(datetime),
-    });
-
     const senders = chatData.getSeries("sender").distinct();
 
     const messageCount = chatData
@@ -22,7 +22,23 @@ self.onmessage = (message) => {
             ),
         }));
 
-    self.postMessage({ senders: senders.toArray(), messageCount: messageCount.toArray() });
+    return { senders: senders.toArray(), messageCount: messageCount.toArray() };
+}
+
+self.onmessage = (message) => {
+    const start = performance.now();
+
+    const chatData = dataForge.fromJSON(message.data.chatData).transformSeries({
+        datetime: (datetime) => moment(datetime),
+    });
+
+    const result = workerExecute(chatData);
+    const end = performance.now();
+
+    self.postMessage({
+        ...result,
+        time: end - start,
+    });
 };
 
 export {};

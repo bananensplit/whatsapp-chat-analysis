@@ -1,21 +1,15 @@
 import * as dataForge from "data-forge";
 import moment from "moment";
 
-self.onmessage = (message) => {
-    const start = performance.now();
-
-    const emoji = dataForge.fromJSON(message.data.emoji);
-
-    const chatDataWithoutMedia = dataForge
-        .fromJSON(message.data.chatDataWithoutMedia)
-        .transformSeries({
-            datetime: (datetime) => moment(datetime),
-        });
-
+/**
+ * Calculates the top 50 emojis used in the chat and determine the number of usages by each sender.
+ * @param {import("data-forge").DataFrame} chatDataWithoutMedia
+ * @returns
+ */
+function workerExecute(emoji, chatDataWithoutMedia) {
     const senders = chatDataWithoutMedia.getSeries("sender").distinct();
 
     const emojiRegex = "(" + emoji.getSeries("emoji").toArray().join("|") + ")";
-
     const emojiCounts = chatDataWithoutMedia
         .selectMany((row) => row.message.match(new RegExp(emojiRegex, "gu")) || [])
         .deflate()
@@ -68,11 +62,27 @@ self.onmessage = (message) => {
         }))
         .orderBy((row) => row.totalCount);
 
+    return {
+        senders: senders.toArray(),
+        emojiCounts: emojiCountsBySender.toArray(),
+    };
+}
+
+self.onmessage = (message) => {
+    const start = performance.now();
+
+    const emoji = dataForge.fromJSON(message.data.emoji);
+    const chatDataWithoutMedia = dataForge
+        .fromJSON(message.data.chatDataWithoutMedia)
+        .transformSeries({
+            datetime: (datetime) => moment(datetime),
+        });
+
+    const result = workerExecute(emoji, chatDataWithoutMedia);
     const end = performance.now();
 
     self.postMessage({
-        senders: senders.toArray(),
-        emojiCounts: emojiCountsBySender.toArray(),
+        ...result,
         time: end - start,
     });
 };

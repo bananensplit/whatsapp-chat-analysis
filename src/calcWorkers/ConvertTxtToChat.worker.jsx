@@ -2,11 +2,12 @@ import * as dataForge from "data-forge";
 import moment from "moment";
 
 /**
- * Worker that takes a string and converts it to a usable format.
- * @param {*} message
+ * Takes a string formatted as a WhatsApp chat export and converts it to a dataForge DataFrame.
+ * It returns one DataFrame with all messages and one without media messages.
+ * @param {string} text String formatted as a WhatsApp chat export
+ * @returns
  */
-
-self.onmessage = (message) => {
+function workerExecute(text) {
     const mediaExcludedPhrase = ["<Medien ausgeschlossen>", "<Media omitted>"];
     const messageSplitRegex =
         /\d{2}\.\d{2}\.\d{2}, \d{2}:\d{2}[\s\S]*?(?=\n\d{2}\.\d{2}\.\d{2}, \d{2}:\d{2})/gm;
@@ -14,13 +15,12 @@ self.onmessage = (message) => {
     const serviceMessageReadRegex = /(\d{2}\.\d{2}\.\d{2}, \d{2}:\d{2}) - ([\s\S]*)/;
     const timeFormat = "DD.MM.YY, HH:mm";
 
-    const text = message.data;
-
     let df = new dataForge.DataFrame({
         considerAllRows: true,
         columnNames: ["rawmessage"],
         rows: [...text.matchAll(messageSplitRegex)].map((row) => [row[0].replace("\r", "")]),
     });
+
     df = df.inflateSeries("rawmessage", (row) => {
         let groups = row.match(messageReadRegex);
         if (groups !== null)
@@ -42,13 +42,23 @@ self.onmessage = (message) => {
         };
     });
 
-    self.postMessage({
+    return {
         chatData: df.toJSON(),
         chatDataWithoutMedia: df
             .where((row) => !mediaExcludedPhrase.includes(row.message))
             .toJSON(),
+    };
+}
+
+self.onmessage = (message) => {
+    const start = performance.now();
+    const result = workerExecute(message.data);
+    const end = performance.now();
+
+    self.postMessage({
+        ...result,
+        time: end - start,
     });
-    console.log("Done parsing");
 };
 
 export {};
