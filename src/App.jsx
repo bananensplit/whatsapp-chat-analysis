@@ -20,6 +20,7 @@ import LongestMessage from "./Graphcomponents/LongestMessage";
 import MessagesOverDay from "./Graphcomponents/MessagesOverDay";
 import MessagesOverWeek from "./Graphcomponents/MessagesOverWeek";
 import TopWordsUsed from "./Graphcomponents/TopWordsUsed";
+import TopEmojisUsed from "./Graphcomponents/TopEmojisUsed";
 
 function App() {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
@@ -173,7 +174,7 @@ function App() {
                 </Box>
                 {chatData && chatDataWithoutMedia && (
                     <>
-                        <Introduction
+                        {/* <Introduction
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
@@ -194,6 +195,10 @@ function App() {
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
                         <TopCharactersUsed
+                            chatData={chatData}
+                            chatDataWithoutMedia={chatDataWithoutMedia}
+                        /> */}
+                        <TopEmojisUsed
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
