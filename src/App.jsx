@@ -99,7 +99,8 @@ function App() {
                                             <a href="https://faq.whatsapp.com/1180414079177245/?cms_platform=android">
                                                 Here
                                             </a>{" "}
-                                            is a short guide on how to do it.
+                                            is a short guide on how to do it. <br />
+                                            Choose the option "Without Media".
                                         </>,
                                     ],
                                     [
