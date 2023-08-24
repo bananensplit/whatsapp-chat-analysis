@@ -42,10 +42,9 @@ function App() {
     function runAnalysis() {
         if (file === null) return;
         setLoading(true);
-        // console.log("runAnalysis");
         fetch("tempdata.txt")
-            .then((r) => r.text())
-            // file.text()
+        .then((r) => r.text())
+        // file.text()
             .then((text) => worker.postMessage(text))
             .catch((error) => console.error(error));
     }
@@ -107,7 +106,7 @@ function App() {
                                         "Upload the exported file",
                                         "Click on uploadfield below and select the file you just downloaded.",
                                     ],
-                                    ["Click on 'Analyze'"],
+                                    ["Run the analysis"],
                                 ].map((step) => (
                                     <Step key={step[0]} active>
                                         <StepLabel>{step[0]}</StepLabel>

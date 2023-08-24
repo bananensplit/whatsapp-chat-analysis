@@ -3,6 +3,7 @@ import moment from "moment";
 
 /**
  * Calculates the top 50 emojis used in the chat and determine the number of usages by each sender.
+ * @param {import("data-forge").DataFrame} emoji
  * @param {import("data-forge").DataFrame} chatDataWithoutMedia
  * @returns
  */

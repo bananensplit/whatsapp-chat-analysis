@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
-import { useEffect, useState, useMemo } from "react";
 import * as dataForge from "data-forge";
+import { useEffect, useMemo, useState } from "react";
 import useFeedbackMachine from "../FeedbackMachine/useFeedbackMachine";
 
 /**
@@ -53,7 +53,7 @@ function TopEmojisUsed({ chatData, chatDataWithoutMedia }) {
                 variant="body1"
                 gutterBottom
             >
-                TBD
+                This graph shows the top 50 emojis used in the chat.
             </Typography>
             <Box
                 sx={{
@@ -92,7 +92,7 @@ function TopEmojisUsed({ chatData, chatDataWithoutMedia }) {
                         tickSize: 5,
                         tickPadding: 5,
                         tickRotation: 0,
-                        legend: "Character",
+                        legend: "Emoji",
                         legendPosition: "middle",
                         legendOffset: -80,
                     }}
