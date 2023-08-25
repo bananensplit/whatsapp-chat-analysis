@@ -45,6 +45,9 @@ const theme = createTheme({
             fontSize: "1em",
             fontFamily: "monospace",
             whiteSpace: "pre",
+            background: "#d5d5d5",
+            padding: "0.2em",
+            borderRadius: "5px",
         },
     },
     components: {

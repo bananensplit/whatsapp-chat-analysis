@@ -22,6 +22,7 @@ function workerExecute(chatData) {
         }))
         .insertPair([0, { hour: -1 }])
         .appendPair([23, { hour: 24 }])
+        .orderBy((row) => row.hour)
         .fillGaps(
             (row1, row2) => row1[1].hour + 1 !== row2[1].hour,
             (row1, row2) =>

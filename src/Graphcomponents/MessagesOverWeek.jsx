@@ -13,7 +13,10 @@ import useFeedbackMachine from "../FeedbackMachine/useFeedbackMachine";
 function MessagesOverWeek({ chatData, chatDataWithoutMedia }) {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
     const worker = useMemo(
-        () => new Worker(new URL("../calcWorkers/MessagesOverWeek.worker.jsx", import.meta.url), {type: "module"}),
+        () =>
+            new Worker(new URL("../calcWorkers/MessagesOverWeek.worker.jsx", import.meta.url), {
+                type: "module",
+            }),
         []
     );
 
@@ -23,7 +26,7 @@ function MessagesOverWeek({ chatData, chatDataWithoutMedia }) {
     useEffect(() => {
         if (chatData !== "") {
             setLoading(true);
-            worker.postMessage({chatData});
+            worker.postMessage({ chatData });
         }
     }, [chatData]);
 
@@ -38,14 +41,12 @@ function MessagesOverWeek({ chatData, chatDataWithoutMedia }) {
 
     return (
         <Box>
-            <Typography align="center" variant="h3" gutterBottom>
+            <Typography textAlign="center" variant="h3" gutterBottom>
                 Messages over week
             </Typography>
-            <Typography
-                sx={{ mr: "20px", ml: "20px", textAlign: "justify" }}
-                variant="body1"
-                gutterBottom
-            >
+
+            <Typography mr="20px" ml="20px" textAlign="justify" variant="body1" gutterBottom>
+                Now we do the same as above, but instead of hours per day we look at days per week.
                 This graph shows the number of messages sent by each person over the days of a week.
                 The messages are grouped by the week day they were sent in. The graph is
                 interactive, you can click on the legend to hide/show the data for a specific

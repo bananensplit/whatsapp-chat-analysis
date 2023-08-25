@@ -13,7 +13,10 @@ import useFeedbackMachine from "../FeedbackMachine/useFeedbackMachine";
 function MessagesOverDay({ chatData, chatDataWithoutMedia }) {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
     const worker = useMemo(
-        () => new Worker(new URL("../calcWorkers/MessagesOverDay.worker.jsx", import.meta.url), {type: "module"}),
+        () =>
+            new Worker(new URL("../calcWorkers/MessagesOverDay.worker.jsx", import.meta.url), {
+                type: "module",
+            }),
         []
     );
 
@@ -23,7 +26,7 @@ function MessagesOverDay({ chatData, chatDataWithoutMedia }) {
     useEffect(() => {
         if (chatData !== "") {
             setLoading(true);
-            worker.postMessage({chatData});
+            worker.postMessage({ chatData });
         }
     }, [chatData]);
 
@@ -38,20 +41,19 @@ function MessagesOverDay({ chatData, chatDataWithoutMedia }) {
 
     return (
         <Box>
-            <Typography align="center" variant="h3" gutterBottom>
+            <Typography textAlign="center" variant="h3" gutterBottom>
                 Messages over day
             </Typography>
-            <Typography
-                sx={{ mr: "20px", ml: "20px", textAlign: "justify" }}
-                variant="body1"
-                gutterBottom
-            >
-                This graph shows the number of messages sent by each person over the hours of a day.
-                The messages are grouped by the hour they were sent in. This means that all messages
-                sent from X:00:00 to X:59:59 are grouped together and show up as one column in the
-                graph. The graph is interactive, you can click on the legend to hide/show the data
-                for a specific person.
+
+            <Typography mr="20px" ml="20px" textAlign="justify" variant="body1" gutterBottom>
+                Now we look at when you sent the most messages during the day. This graph shows the
+                number of messages sent by each person over the hours of a day. The messages are
+                grouped by the hour they were sent in. This means that all messages sent from
+                X:00:00 to X:59:59 are grouped together and show up as one column in the graph. The
+                graph is interactive, you can click on the legend to hide/show the data for a
+                specific person.
             </Typography>
+
             <Box
                 sx={{
                     height: "400px",

@@ -12,11 +12,12 @@ function workerExecute(chatDataWithoutMedia) {
     const longestMessagesBySender = chatDataWithoutMedia
         .groupBy((row) => row.sender)
         .select((group) =>
-            group.aggregate(chatDataWithoutMedia.first(), (agg, row) =>
+            group.aggregate(group.first(), (agg, row) =>
                 agg.messageLength < row.messageLength ? row : agg
             )
         )
-        .inflate();
+        .inflate()
+        .orderByDescending((row) => row.messageLength);
 
     return {
         senders: senders.toArray(),

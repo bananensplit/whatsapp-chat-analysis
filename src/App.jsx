@@ -3,6 +3,7 @@ import {
     Box,
     Button,
     Chip,
+    Divider,
     Paper,
     Step,
     StepContent,
@@ -21,6 +22,8 @@ import MessagesOverDay from "./Graphcomponents/MessagesOverDay";
 import MessagesOverWeek from "./Graphcomponents/MessagesOverWeek";
 import TopWordsUsed from "./Graphcomponents/TopWordsUsed";
 import TopEmojisUsed from "./Graphcomponents/TopEmojisUsed";
+import NumberOfMessages from "./Graphcomponents/NumberOfMessages";
+import MessagesOverTime from "./Graphcomponents/MessagesOverTime";
 
 function App() {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
@@ -42,9 +45,8 @@ function App() {
     function runAnalysis() {
         if (file === null) return;
         setLoading(true);
-        fetch("tempdata.txt")
-        .then((r) => r.text())
-        // file.text()
+        fetch("tempdata.txt").then((r) => r.text())
+            // file.text()
             .then((text) => worker.postMessage(text))
             .catch((error) => console.error(error));
     }
@@ -69,7 +71,7 @@ function App() {
 
                     display: "flex",
                     flexDirection: "column",
-                    gap: "70px",
+                    // gap: "70px",
                 }}
             >
                 <Box
@@ -172,32 +174,96 @@ function App() {
                         Run the analysis
                     </Button>
                 </Box>
+
                 {chatData && chatDataWithoutMedia && (
                     <>
-                        <Introduction
+                        <Typography textAlign="center" variant="h2" gutterBottom>
+                            Messages
+                        </Typography>
+                        {[
+                            "This is the first section of the analysis. It contains all the data about the messages in the chat: How many messages were sent? What was the longest message? Who sent how many messages? And so on. More granular data about the messages can be found in the following sections, where we go on the word and even character level.",
+                            "So let's get started and take a look at your chat like you have never done before.",
+                        ].map((i) => (
+                            <Typography
+                                sx={{ mr: "20px", ml: "20px" }}
+                                textAlign="justify"
+                                variant="body1"
+                                gutterBottom
+                            >
+                                {i}
+                            </Typography>
+                        ))}
+                        <Divider sx={{ mt: "30px", mb: "30px" }} />
+
+                        <NumberOfMessages
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
-                        <LongestMessage
-                            chatData={chatData}
-                            chatDataWithoutMedia={chatDataWithoutMedia}
-                        />
+                        <Divider sx={{ mt: "30px", mb: "30px" }} />
+
                         <MessagesOverDay
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
+                        <Divider sx={{ mt: "30px", mb: "30px" }} />
+
                         <MessagesOverWeek
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
+                        <Divider sx={{ mt: "30px", mb: "30px" }} />
+
+                        <LongestMessage
+                            chatData={chatData}
+                            chatDataWithoutMedia={chatDataWithoutMedia}
+                        />
+                        <Divider sx={{ mt: "30px", mb: "30px" }} />
+
+                        <MessagesOverTime
+                            chatData={chatData}
+                            chatDataWithoutMedia={chatDataWithoutMedia}
+                        />
+
+
+                        <Divider sx={{ mt: "60px", mb: "60px" }} />
+
+
+                        <Typography textAlign="center" variant="h2" gutterBottom>
+                            TO BE PRETTIFIED
+                        </Typography>
+                        {[
+                            "This section is for the graphs that aren't finished yet.",
+                            "Maybe the data is not calculated (very) correctly or the description is missing/incorrect. Altough the data is not correct, it is still interesting to look at the graphs and see what they are supposed to show.",
+                        ].map((i) => (
+                            <Typography
+                                sx={{ mr: "20px", ml: "20px" }}
+                                textAlign="justify"
+                                variant="body1"
+                                gutterBottom
+                            >
+                                {i}
+                            </Typography>
+                        ))}
+                        <Divider sx={{ mt: "30px", mb: "30px" }} />
+                        
+                        <Introduction
+                            chatData={chatData}
+                            chatDataWithoutMedia={chatDataWithoutMedia}
+                        />
+                        <Divider sx={{ mt: "30px", mb: "30px" }} />
+                        
                         <TopWordsUsed
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
+                        <Divider sx={{ mt: "30px", mb: "30px" }} />
+                        
                         <TopCharactersUsed
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
+                        <Divider sx={{ mt: "30px", mb: "30px" }} />
+
                         <TopEmojisUsed
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
