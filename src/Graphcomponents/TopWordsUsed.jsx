@@ -3,7 +3,6 @@ import { ResponsiveBar } from "@nivo/bar";
 import { useEffect, useState, useMemo } from "react";
 import useFeedbackMachine from "../FeedbackMachine/useFeedbackMachine";
 
-
 /**
  *
  * @param {Object} props
@@ -14,7 +13,10 @@ import useFeedbackMachine from "../FeedbackMachine/useFeedbackMachine";
 function TopWordsUsed({ chatData, chatDataWithoutMedia }) {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
     const worker = useMemo(
-        () => new Worker(new URL("../calcWorkers/TopWordsUsed.worker.jsx", import.meta.url), {type: "module"}),
+        () =>
+            new Worker(new URL("../calcWorkers/TopWordsUsed.worker.jsx", import.meta.url), {
+                type: "module",
+            }),
         []
     );
 
@@ -24,7 +26,7 @@ function TopWordsUsed({ chatData, chatDataWithoutMedia }) {
     useEffect(() => {
         if (chatDataWithoutMedia !== "") {
             setLoading(true);
-            worker.postMessage({chatDataWithoutMedia});
+            worker.postMessage({ chatDataWithoutMedia });
         }
     }, [chatDataWithoutMedia]);
 
@@ -39,30 +41,24 @@ function TopWordsUsed({ chatData, chatDataWithoutMedia }) {
 
     return (
         <Box>
-            <Typography align="center" variant="h3" gutterBottom>
+            <Typography textAlign="center" variant="h3" gutterBottom>
                 Top 100 words used
             </Typography>
-            <Typography
-                sx={{ mr: "20px", ml: "20px", textAlign: "justify" }}
-                variant="body1"
-                gutterBottom
-            >
-                Below you can see the top 100 words used in the chat. The words are sorted by the
-                total number of times they were used in the chat. The bars are colored by the sender
-                of the message. In this context a word is defined as a string of alphanumieric
-                characters. This string has to be one or more characters in length and not
-                interupted by any whitespaces, dots, commas, exclemationmarks, etc. (the only
-                exception is the underscore). You can hover over the bars to see the exact number of
-                times the word was used by each sender.
+
+            <Typography mr="20px" ml="20px" textAlign="justify" variant="body1" gutterBottom>
+                Below you can see the top 100 words used in the chat. The total height of each bar
+                represents the total number of occurences of the word in the chat. The bars are
+                split into segments, each representing the number of times the word was used by each
+                sender.
             </Typography>
-            <Typography
-                sx={{ mr: "20px", ml: "20px", textAlign: "justify" }}
-                variant="body1"
-                gutterBottom
-            >
-                For the programmers among us, the regular expression used to find the words is:{" "}
-                <code>/\w+/g</code>.
+            <Typography mr="20px" ml="20px" textAlign="justify" variant="body1" gutterBottom>
+                You can hover over the bars to see the exact number of times the word was used by
+                each sender.
             </Typography>
+            <Typography mr="20px" ml="20px" textAlign="justify" variant="body1" gutterBottom>
+                If a sender doesn't appear in the bar, it means they didn't use the word.
+            </Typography>
+
             <Box
                 sx={{
                     height: "1800px",

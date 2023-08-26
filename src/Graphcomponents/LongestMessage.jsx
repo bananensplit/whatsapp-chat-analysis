@@ -57,7 +57,7 @@ function LongestMessage({ chatData, chatDataWithoutMedia }) {
             </Typography>
 
             {longestMessagesBySender.map((message) => (
-                <Box mt="20px">
+                <Box mt="20px" key={message.sender + message.datetime}>
                     <Typography align="center" variant="body1" gutterBottom>
                         Longest message sent by <b>{message.sender}</b> has a length of{" "}
                         <b>{message.messageLength}</b> characters and was sent on{" "}

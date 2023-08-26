@@ -29,7 +29,7 @@ function workerExecute(text) {
                 sender: groups[2],
                 message: groups[3],
                 messageLength: groups[3].length,
-                wordCount: groups[3].split(" ").length,
+                wordCount: (groups[3].match(/\p{L}+/gu) || []).length,
             };
 
         groups = row.match(serviceMessageReadRegex);
@@ -38,7 +38,7 @@ function workerExecute(text) {
             sender: "WhatsApp",
             message: groups[2],
             messageLength: groups[2].length,
-            wordCount: groups[2].split(" ").length,
+            wordCount: (groups[2].match(/\p{L}+/gu) || []).length,
         };
     });
 

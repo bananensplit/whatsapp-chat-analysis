@@ -27,7 +27,7 @@ function TopEmojisUsed({ chatData, chatDataWithoutMedia }) {
     useEffect(() => {
         if (chatDataWithoutMedia !== "") {
             setLoading(true);
-            fetch("/emoji.csv")
+            fetch(import.meta.env.BASE_URL + "emoji.csv")
                 .then((r) => r.text())
                 .then((text) => dataForge.fromCSV(text).toJSON())
                 .then((emoji) => worker.postMessage({ chatDataWithoutMedia, emoji }));

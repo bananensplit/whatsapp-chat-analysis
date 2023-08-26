@@ -24,6 +24,7 @@ import TopWordsUsed from "./Graphcomponents/TopWordsUsed";
 import TopEmojisUsed from "./Graphcomponents/TopEmojisUsed";
 import NumberOfMessages from "./Graphcomponents/NumberOfMessages";
 import MessagesOverTime from "./Graphcomponents/MessagesOverTime";
+import NumberOfWords from "./Graphcomponents/NumberOfWords";
 
 function App() {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
@@ -37,16 +38,16 @@ function App() {
 
     const [chatData, setChatData] = useState("");
     const [chatDataWithoutMedia, setChatDataWithoutMedia] = useState("");
-    // const [file, setFile] = useState(null);
-    const [file, setFile] = useState("null");
+    const [file, setFile] = useState(null);
+    // const [file, setFile] = useState("null");
 
     useEffect(() => runAnalysis(), []);
 
     function runAnalysis() {
         if (file === null) return;
         setLoading(true);
-        fetch("tempdata.txt").then((r) => r.text())
-            // file.text()
+        // fetch("tempdata.txt").then((r) => r.text())
+            file.text()
             .then((text) => worker.postMessage(text))
             .catch((error) => console.error(error));
     }
@@ -180,19 +181,18 @@ function App() {
                         <Typography textAlign="center" variant="h2" gutterBottom>
                             Messages
                         </Typography>
-                        {[
-                            "This is the first section of the analysis. It contains all the data about the messages in the chat: How many messages were sent? What was the longest message? Who sent how many messages? And so on. More granular data about the messages can be found in the following sections, where we go on the word and even character level.",
-                            "So let's get started and take a look at your chat like you have never done before.",
-                        ].map((i) => (
-                            <Typography
-                                sx={{ mr: "20px", ml: "20px" }}
-                                textAlign="justify"
-                                variant="body1"
-                                gutterBottom
-                            >
-                                {i}
-                            </Typography>
-                        ))}
+
+                        <Typography mr="20px" ml="20px" textAlign="justify" gutterBottom>
+                            This is the first section of the analysis. It contains all the data
+                            about the messages in the chat: How many messages were sent? What was
+                            the longest message? Who sent how many messages? And so on. More
+                            granular data about the messages can be found in the following sections,
+                            where we go on the word and even character level.
+                        </Typography>
+                        <Typography mr="20px" ml="20px" textAlign="justify" gutterBottom>
+                            So let's get started and take a look at your chat like you have never
+                            done before.
+                        </Typography>
                         <Divider sx={{ mt: "30px", mb: "30px" }} />
 
                         <NumberOfMessages
@@ -224,9 +224,46 @@ function App() {
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
 
-
                         <Divider sx={{ mt: "60px", mb: "60px" }} />
 
+                        <Typography textAlign="center" variant="h2" gutterBottom>
+                            Words
+                        </Typography>
+
+                        <Typography mr="20px" ml="20px" textAlign="justify" gutterBottom>
+                            The second section of this analysis is about the words in the chat. We
+                            go one step deeper and don't just look at the messages as a whole but at
+                            the words that make up the messages. How many words were sent? Who sent
+                            how many words? And so on.
+                        </Typography>
+                        <Typography mr="20px" ml="20px" textAlign="justify" gutterBottom>
+                            In this context a word is defined as a string of alphanumieric
+                            characters. This string has to be one or more characters in length and
+                            not interupted by any whitespaces, dots, commas, exclemationmarks,
+                            questionmarks, underscores, etc.
+                        </Typography>
+                        <Typography mr="20px" ml="20px" textAlign="justify" gutterBottom>
+                            For the programmers among us: A word is every string that matches the
+                            following regular expression:&nbsp;
+                            <Typography variant="code">{"/\\p{L}+/u"}</Typography>
+                        </Typography>
+                        <Typography mr="20px" ml="20px" textAlign="justify" gutterBottom>
+                            Also note that the words are not case sensitive. So "Hello", "HELLO",
+                            "hello" and "hElLo" are in this context equal.
+                        </Typography>
+                        <Divider sx={{ mt: "30px", mb: "30px" }} />
+
+                        <NumberOfWords
+                            chatData={chatData}
+                            chatDataWithoutMedia={chatDataWithoutMedia}
+                        />
+                        <Divider sx={{ mt: "30px", mb: "30px" }} />
+
+                        <TopWordsUsed
+                            chatData={chatData}
+                            chatDataWithoutMedia={chatDataWithoutMedia}
+                        />
+                        <Divider sx={{ mt: "30px", mb: "30px" }} />
 
                         <Typography textAlign="center" variant="h2" gutterBottom>
                             TO BE PRETTIFIED
@@ -245,19 +282,13 @@ function App() {
                             </Typography>
                         ))}
                         <Divider sx={{ mt: "30px", mb: "30px" }} />
-                        
+
                         <Introduction
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
                         <Divider sx={{ mt: "30px", mb: "30px" }} />
-                        
-                        <TopWordsUsed
-                            chatData={chatData}
-                            chatDataWithoutMedia={chatDataWithoutMedia}
-                        />
-                        <Divider sx={{ mt: "30px", mb: "30px" }} />
-                        
+
                         <TopCharactersUsed
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}

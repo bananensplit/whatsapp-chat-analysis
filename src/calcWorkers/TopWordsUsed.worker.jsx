@@ -14,7 +14,7 @@ function workerExecute(chatDataWithoutMedia) {
         .select((group) => ({
             sender: group.first().sender,
             message: group
-                .selectMany((row) => row.message.match(/\w+/g) || [])
+                .selectMany((row) => row.message.match(/\p{L}+/gu) || [])
                 .deflate()
                 .map((word) => word.toLowerCase())
                 .groupBy((word) => word)
@@ -31,7 +31,7 @@ function workerExecute(chatDataWithoutMedia) {
         .bake();
 
     const wordCounts = chatDataWithoutMedia
-        .selectMany((row) => row.message.match(/\w+/g) || [])
+        .selectMany((row) => row.message.match(/\p{L}+/gu) || [])
         .deflate()
         .map((word) => word.toLowerCase())
         .groupBy((word) => word)
