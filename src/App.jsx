@@ -25,6 +25,7 @@ import TopEmojisUsed from "./Graphcomponents/TopEmojisUsed";
 import NumberOfMessages from "./Graphcomponents/NumberOfMessages";
 import MessagesOverTime from "./Graphcomponents/MessagesOverTime";
 import NumberOfWords from "./Graphcomponents/NumberOfWords";
+import AvgWordsPerMessage from "./Graphcomponents/AvgWordsPerMessage";
 
 function App() {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
@@ -38,16 +39,17 @@ function App() {
 
     const [chatData, setChatData] = useState("");
     const [chatDataWithoutMedia, setChatDataWithoutMedia] = useState("");
-    const [file, setFile] = useState(null);
-    // const [file, setFile] = useState("null");
+    // const [file, setFile] = useState(null);
+    const [file, setFile] = useState("null");
 
     useEffect(() => runAnalysis(), []);
 
     function runAnalysis() {
         if (file === null) return;
         setLoading(true);
-        // fetch("tempdata.txt").then((r) => r.text())
-            file.text()
+        fetch("tempdata.txt")
+            .then((r) => r.text())
+            // file.text()
             .then((text) => worker.postMessage(text))
             .catch((error) => console.error(error));
     }
@@ -178,7 +180,7 @@ function App() {
 
                 {chatData && chatDataWithoutMedia && (
                     <>
-                        <Typography textAlign="center" variant="h2" gutterBottom>
+                        {/* <Typography textAlign="center" variant="h2" gutterBottom>
                             Messages
                         </Typography>
 
@@ -224,7 +226,7 @@ function App() {
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
 
-                        <Divider sx={{ mt: "60px", mb: "60px" }} />
+                        <Divider sx={{ mt: "60px", mb: "60px" }} /> */}
 
                         <Typography textAlign="center" variant="h2" gutterBottom>
                             Words
@@ -265,7 +267,34 @@ function App() {
                         />
                         <Divider sx={{ mt: "30px", mb: "30px" }} />
 
+                        <AvgWordsPerMessage
+                            chatData={chatData}
+                            chatDataWithoutMedia={chatDataWithoutMedia}
+                        />
+                        <Divider sx={{ mt: "30px", mb: "30px" }} />
+
                         <Typography textAlign="center" variant="h2" gutterBottom>
+                            Characters
+                        </Typography>
+
+                        <Typography mr="20px" ml="20px" textAlign="justify" gutterBottom>
+                            The third section of this analysis goes anther step deeper and looks at
+                            the characters in the chat. Here we don't look at the messages or the
+                            words but at the characters that were typed. Characters are the finest
+                            subdivision of the data and it doesn't really make sense to go any
+                            deeper.
+                        </Typography>
+                        <Typography mr="20px" ml="20px" textAlign="justify" gutterBottom>
+                            In this section we will look at the number of characters that were sent, who
+                            sent how many characters, what were the most used characters and so on.
+                        </Typography>
+                        <Typography mr="20px" ml="20px" textAlign="justify" gutterBottom>
+                            We will also look at emojis, which are a special kind of character. We will
+                            look at the number of emojis that were sent, who sent how many emojis, what
+                            were the most used emojis and so on.
+                        </Typography>
+
+                        {/* <Typography textAlign="center" variant="h2" gutterBottom>
                             TO BE PRETTIFIED
                         </Typography>
                         {[
@@ -298,7 +327,7 @@ function App() {
                         <TopEmojisUsed
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
-                        />
+                        /> */}
                     </>
                 )}
             </Box>
