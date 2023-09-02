@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
-import useFeedbackMachine from "../FeedbackMachine/useFeedbackMachine";
+import useFeedbackMachine from "../../FeedbackMachine/useFeedbackMachine";
 import { ResponsiveSunburst } from "@nivo/sunburst";
 
 /**
@@ -14,7 +14,7 @@ function NumberOfMessages({ chatData, chatDataWithoutMedia }) {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
     const worker = useMemo(
         () =>
-            new Worker(new URL("../calcWorkers/NumberOfMessages.worker.jsx", import.meta.url), {
+            new Worker(new URL("./NumberOfMessages.worker.jsx", import.meta.url), {
                 type: "module",
             }),
         []

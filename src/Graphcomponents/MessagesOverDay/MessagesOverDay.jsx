@@ -1,8 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
-import { useEffect, useState, useMemo } from "react";
-import useFeedbackMachine from "../FeedbackMachine/useFeedbackMachine";
-
+import { useEffect, useMemo, useState } from "react";
+import useFeedbackMachine from "../../FeedbackMachine/useFeedbackMachine";
 
 /**
  *
@@ -11,10 +10,13 @@ import useFeedbackMachine from "../FeedbackMachine/useFeedbackMachine";
  * @param {import("data-forge").DataFrame} props.chatDataWithoutMedia
  * @returns {JSX.Element}
  */
-function TopCharactersUsed({ chatData, chatDataWithoutMedia }) {
+function MessagesOverDay({ chatData, chatDataWithoutMedia }) {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
     const worker = useMemo(
-        () => new Worker(new URL("../calcWorkers/TopCharactersUsed.worker.jsx", import.meta.url), {type: "module"}),
+        () =>
+            new Worker(new URL("./MessagesOverDay.worker.jsx", import.meta.url), {
+                type: "module",
+            }),
         []
     );
 
@@ -22,16 +24,16 @@ function TopCharactersUsed({ chatData, chatDataWithoutMedia }) {
     const [senders, setSenders] = useState([]);
 
     useEffect(() => {
-        if (chatDataWithoutMedia !== "") {
+        if (chatData !== "") {
             setLoading(true);
-            worker.postMessage({chatDataWithoutMedia});
+            worker.postMessage({ chatData });
         }
-    }, [chatDataWithoutMedia]);
+    }, [chatData]);
 
     useEffect(() => {
         worker.onmessage = (message) => {
             const result = message.data;
-            setConvertedData(result.charCounts);
+            setConvertedData(result.messageCount);
             setSenders(result.senders);
             setLoading(false);
         };
@@ -39,19 +41,22 @@ function TopCharactersUsed({ chatData, chatDataWithoutMedia }) {
 
     return (
         <Box>
-            <Typography align="center" variant="h3" gutterBottom>
-                Top 50 characters used
+            <Typography textAlign="center" variant="h3" gutterBottom>
+                Messages over day
             </Typography>
-            <Typography
-                sx={{ mr: "20px", ml: "20px", textAlign: "justify" }}
-                variant="body1"
-                gutterBottom
-            >
-                TBD
+
+            <Typography mr="20px" ml="20px" textAlign="justify" variant="body1" gutterBottom>
+                Now we look at when you sent the most messages during the day. This graph shows the
+                number of messages sent by each person over the hours of a day. The messages are
+                grouped by the hour they were sent in. This means that all messages sent from
+                X:00:00 to X:59:59 are grouped together and show up as one column in the graph. The
+                graph is interactive, you can click on the legend to hide/show the data for a
+                specific person.
             </Typography>
+
             <Box
                 sx={{
-                    height: "1200px",
+                    height: "400px",
                     width: "100%",
                 }}
                 fontFamily={"Arial"}
@@ -59,26 +64,19 @@ function TopCharactersUsed({ chatData, chatDataWithoutMedia }) {
                 <ResponsiveBar
                     data={convertedData}
                     keys={senders}
-                    indexBy="char"
-                    layout="horizontal"
-                    margin={{ top: 60, right: 140, bottom: 60, left: 100 }}
+                    indexBy="hour"
+                    margin={{ top: 20, right: 140, bottom: 60, left: 70 }}
                     valueScale={{ type: "linear" }}
                     indexScale={{ type: "band", round: true }}
                     colors={{ scheme: "nivo" }}
-                    axisTop={{
-                        tickSize: 5,
-                        tickPadding: 5,
-                        tickRotation: -45,
-                        legend: "Number of uses",
-                        legendPosition: "middle",
-                        legendOffset: -45,
-                    }}
+                    axisTop={null}
                     axisRight={null}
                     axisBottom={{
                         tickSize: 5,
                         tickPadding: 5,
                         tickRotation: 45,
-                        legend: "Number of uses",
+                        format: (e) => e + ":00",
+                        legend: "Hour of day",
                         legendPosition: "middle",
                         legendOffset: 45,
                     }}
@@ -86,19 +84,17 @@ function TopCharactersUsed({ chatData, chatDataWithoutMedia }) {
                         tickSize: 5,
                         tickPadding: 5,
                         tickRotation: 0,
-                        legend: "Character",
+                        legend: "Message Count",
                         legendPosition: "middle",
-                        legendOffset: -80,
+                        legendOffset: -50,
                     }}
-                    enableGridX={true}
-                    enableGridY={false}
                     labelSkipWidth={12}
                     labelSkipHeight={12}
-                    tooltipLabel={(e) => "Number of uses"}
+                    tooltipLabel={(e) => e.indexValue + ":00 to " + e.indexValue + ":59"}
                     legends={[
                         {
                             dataFrom: "keys",
-                            anchor: "top-right",
+                            anchor: "bottom-right",
                             direction: "column",
                             justify: false,
                             translateX: 120,
@@ -127,4 +123,4 @@ function TopCharactersUsed({ chatData, chatDataWithoutMedia }) {
     );
 }
 
-export default TopCharactersUsed;
+export default MessagesOverDay;

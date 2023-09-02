@@ -15,17 +15,17 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { MuiFileInput } from "mui-file-input";
 import { useEffect, useMemo, useState } from "react";
 import useFeedbackMachine from "./FeedbackMachine/useFeedbackMachine";
-import TopCharactersUsed from "./Graphcomponents/TopCharactersUsed";
+import TopCharactersUsed from "./Graphcomponents/TopCharactersUsed/TopCharactersUsed";
 import Introduction from "./Graphcomponents/Introduction";
-import LongestMessage from "./Graphcomponents/LongestMessage";
-import MessagesOverDay from "./Graphcomponents/MessagesOverDay";
-import MessagesOverWeek from "./Graphcomponents/MessagesOverWeek";
-import TopWordsUsed from "./Graphcomponents/TopWordsUsed";
-import TopEmojisUsed from "./Graphcomponents/TopEmojisUsed";
-import NumberOfMessages from "./Graphcomponents/NumberOfMessages";
-import MessagesOverTime from "./Graphcomponents/MessagesOverTime";
-import NumberOfWords from "./Graphcomponents/NumberOfWords";
-import AvgWordsPerMessage from "./Graphcomponents/AvgWordsPerMessage";
+import LongestMessage from "./Graphcomponents/LongestMessage/LongestMessage";
+import MessagesOverDay from "./Graphcomponents/MessagesOverDay/MessagesOverDay";
+import MessagesOverWeek from "./Graphcomponents/MessagesOverWeek/MessagesOverWeek";
+import TopWordsUsed from "./Graphcomponents/TopWordsUsed/TopWordsUsed";
+import TopEmojisUsed from "./Graphcomponents/TopEmojisUsed/TopEmojisUsed";
+import NumberOfMessages from "./Graphcomponents/NumberOfMessages/NumberOfMessages";
+import MessagesOverTime from "./Graphcomponents/MessagesOverTime/MessagesOverTime";
+import NumberOfWords from "./Graphcomponents/NumberOfWords/NumberOfWords";
+import AvgWordsPerMessage from "./Graphcomponents/AvgWordsPerMessage/AvgWordsPerMessage";
 
 function App() {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();

@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
 import { useEffect, useMemo, useState } from "react";
-import useFeedbackMachine from "../FeedbackMachine/useFeedbackMachine";
+import useFeedbackMachine from "../../FeedbackMachine/useFeedbackMachine";
 
 /**
  *
@@ -14,7 +14,7 @@ function MessagesOverWeek({ chatData, chatDataWithoutMedia }) {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
     const worker = useMemo(
         () =>
-            new Worker(new URL("../calcWorkers/MessagesOverWeek.worker.jsx", import.meta.url), {
+            new Worker(new URL("./MessagesOverWeek.worker.jsx", import.meta.url), {
                 type: "module",
             }),
         []

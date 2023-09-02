@@ -1,7 +1,7 @@
 import { ResponsiveLine } from "@nivo/line";
 import { Box, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
-import useFeedbackMachine from "../FeedbackMachine/useFeedbackMachine";
+import useFeedbackMachine from "../../FeedbackMachine/useFeedbackMachine";
 
 /**
  *
@@ -14,7 +14,7 @@ function MessagesOverTime({ chatData, chatDataWithoutMedia }) {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
     const worker = useMemo(
         () =>
-            new Worker(new URL("../calcWorkers/MessagesOverTime.worker.jsx", import.meta.url), {
+            new Worker(new URL("./MessagesOverTime.worker.jsx", import.meta.url), {
                 type: "module",
             }),
         []

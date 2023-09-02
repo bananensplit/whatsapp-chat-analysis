@@ -1,7 +1,8 @@
 import { Box, Typography } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
-import { useEffect, useState, useMemo } from "react";
-import useFeedbackMachine from "../FeedbackMachine/useFeedbackMachine";
+import * as dataForge from "data-forge";
+import { useEffect, useMemo, useState } from "react";
+import useFeedbackMachine from "../../FeedbackMachine/useFeedbackMachine";
 
 /**
  *
@@ -10,13 +11,11 @@ import useFeedbackMachine from "../FeedbackMachine/useFeedbackMachine";
  * @param {import("data-forge").DataFrame} props.chatDataWithoutMedia
  * @returns {JSX.Element}
  */
-function TopWordsUsed({ chatData, chatDataWithoutMedia }) {
+function TopEmojisUsed({ chatData, chatDataWithoutMedia }) {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
     const worker = useMemo(
         () =>
-            new Worker(new URL("../calcWorkers/TopWordsUsed.worker.jsx", import.meta.url), {
-                type: "module",
-            }),
+            new Worker(new URL("./TopEmojisUsed.worker.jsx", import.meta.url), { type: "module" }),
         []
     );
 
@@ -26,14 +25,17 @@ function TopWordsUsed({ chatData, chatDataWithoutMedia }) {
     useEffect(() => {
         if (chatDataWithoutMedia !== "") {
             setLoading(true);
-            worker.postMessage({ chatDataWithoutMedia });
+            fetch(import.meta.env.BASE_URL + "emoji.csv")
+                .then((r) => r.text())
+                .then((text) => dataForge.fromCSV(text).toJSON())
+                .then((emoji) => worker.postMessage({ chatDataWithoutMedia, emoji }));
         }
     }, [chatDataWithoutMedia]);
 
     useEffect(() => {
         worker.onmessage = (message) => {
             const result = message.data;
-            setConvertedData(result.wordCounts);
+            setConvertedData(result.emojiCounts);
             setSenders(result.senders);
             setLoading(false);
         };
@@ -41,27 +43,19 @@ function TopWordsUsed({ chatData, chatDataWithoutMedia }) {
 
     return (
         <Box>
-            <Typography textAlign="center" variant="h3" gutterBottom>
-                Top 100 words used
+            <Typography align="center" variant="h3" gutterBottom>
+                Top 50 emojis used
             </Typography>
-
-            <Typography mr="20px" ml="20px" textAlign="justify" variant="body1" gutterBottom>
-                Below you can see the top 100 words used in the chat. The total height of each bar
-                represents the total number of occurences of the word in the chat. The bars are
-                split into segments, each representing the number of times the word was used by each
-                sender.
+            <Typography
+                sx={{ mr: "20px", ml: "20px", textAlign: "justify" }}
+                variant="body1"
+                gutterBottom
+            >
+                This graph shows the top 50 emojis used in the chat.
             </Typography>
-            <Typography mr="20px" ml="20px" textAlign="justify" variant="body1" gutterBottom>
-                You can hover over the bars to see the exact number of times the word was used by
-                each sender.
-            </Typography>
-            <Typography mr="20px" ml="20px" textAlign="justify" variant="body1" gutterBottom>
-                If a sender doesn't appear in the bar, it means they didn't use the word.
-            </Typography>
-
             <Box
                 sx={{
-                    height: "1800px",
+                    height: "1200px",
                     width: "100%",
                 }}
                 fontFamily={"Arial"}
@@ -69,7 +63,7 @@ function TopWordsUsed({ chatData, chatDataWithoutMedia }) {
                 <ResponsiveBar
                     data={convertedData}
                     keys={senders}
-                    indexBy="word"
+                    indexBy="emoji"
                     layout="horizontal"
                     margin={{ top: 60, right: 140, bottom: 60, left: 100 }}
                     valueScale={{ type: "linear" }}
@@ -96,7 +90,7 @@ function TopWordsUsed({ chatData, chatDataWithoutMedia }) {
                         tickSize: 5,
                         tickPadding: 5,
                         tickRotation: 0,
-                        legend: "Word",
+                        legend: "Emoji",
                         legendPosition: "middle",
                         legendOffset: -80,
                     }}
@@ -137,4 +131,4 @@ function TopWordsUsed({ chatData, chatDataWithoutMedia }) {
     );
 }
 
-export default TopWordsUsed;
+export default TopEmojisUsed;
