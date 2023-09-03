@@ -19,13 +19,13 @@ function TopEmojisUsed({ chatData, chatDataWithoutMedia }) {
         []
     );
 
-    const [convertedData, setConvertedData] = useState([]);
+    const [emojiCounts, setEmojiCounts] = useState([]);
     const [senders, setSenders] = useState([]);
 
     useEffect(() => {
         if (chatDataWithoutMedia !== "") {
             setLoading(true);
-            fetch(import.meta.env.BASE_URL + "emoji.csv")
+            fetch(import.meta.env.BASE_URL + "new_emoji.csv")
                 .then((r) => r.text())
                 .then((text) => dataForge.fromCSV(text).toJSON())
                 .then((emoji) => worker.postMessage({ chatDataWithoutMedia, emoji }));
@@ -35,7 +35,7 @@ function TopEmojisUsed({ chatData, chatDataWithoutMedia }) {
     useEffect(() => {
         worker.onmessage = (message) => {
             const result = message.data;
-            setConvertedData(result.emojiCounts);
+            setEmojiCounts(result.emojiCounts);
             setSenders(result.senders);
             setLoading(false);
         };
@@ -46,13 +46,24 @@ function TopEmojisUsed({ chatData, chatDataWithoutMedia }) {
             <Typography align="center" variant="h3" gutterBottom>
                 Top 50 emojis used
             </Typography>
-            <Typography
-                sx={{ mr: "20px", ml: "20px", textAlign: "justify" }}
-                variant="body1"
-                gutterBottom
-            >
-                This graph shows the top 50 emojis used in the chat.
+            
+            <Typography mr="20px" ml="20px" textAlign="justify" variant="body1" gutterBottom>
+                Below you can see the top 50 emojis used in the chat. The total height of each bar
+                represents the total number of occurences of the emoji in the chat. The bars are
+                split into segments, each representing the number of times the word was used by each
+                sender.
             </Typography>
+            <Typography mr="20px" ml="20px" textAlign="justify" variant="body1" gutterBottom>
+                You can hover over the bars to see the exact number of times the word was used by
+                each sender.
+            </Typography>
+            <Typography mr="20px" ml="20px" textAlign="justify" variant="body1" gutterBottom>
+                If a sender doesn't appear in the bar, it means they didn't use the emoji.
+            </Typography>
+            <Typography mr="20px" ml="20px" textAlign="justify" variant="body1" gutterBottom>
+                TBD DISCLAIMER
+            </Typography>
+
             <Box
                 sx={{
                     height: "1200px",
@@ -61,7 +72,7 @@ function TopEmojisUsed({ chatData, chatDataWithoutMedia }) {
                 fontFamily={"Arial"}
             >
                 <ResponsiveBar
-                    data={convertedData}
+                    data={emojiCounts}
                     keys={senders}
                     indexBy="emoji"
                     layout="horizontal"

@@ -20,7 +20,7 @@ function TopWordsUsed({ chatData, chatDataWithoutMedia }) {
         []
     );
 
-    const [convertedData, setConvertedData] = useState([]);
+    const [wordCounts, setWordCounts] = useState([]);
     const [senders, setSenders] = useState([]);
 
     useEffect(() => {
@@ -33,7 +33,7 @@ function TopWordsUsed({ chatData, chatDataWithoutMedia }) {
     useEffect(() => {
         worker.onmessage = (message) => {
             const result = message.data;
-            setConvertedData(result.wordCounts);
+            setWordCounts(result.wordCounts);
             setSenders(result.senders);
             setLoading(false);
         };
@@ -67,7 +67,7 @@ function TopWordsUsed({ chatData, chatDataWithoutMedia }) {
                 fontFamily={"Arial"}
             >
                 <ResponsiveBar
-                    data={convertedData}
+                    data={wordCounts}
                     keys={senders}
                     indexBy="word"
                     layout="horizontal"

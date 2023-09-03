@@ -16,7 +16,6 @@ import { MuiFileInput } from "mui-file-input";
 import { useEffect, useMemo, useState } from "react";
 import useFeedbackMachine from "./FeedbackMachine/useFeedbackMachine";
 import TopCharactersUsed from "./Graphcomponents/TopCharactersUsed/TopCharactersUsed";
-import Introduction from "./Graphcomponents/Introduction";
 import LongestMessage from "./Graphcomponents/LongestMessage/LongestMessage";
 import MessagesOverDay from "./Graphcomponents/MessagesOverDay/MessagesOverDay";
 import MessagesOverWeek from "./Graphcomponents/MessagesOverWeek/MessagesOverWeek";
@@ -26,6 +25,7 @@ import NumberOfMessages from "./Graphcomponents/NumberOfMessages/NumberOfMessage
 import MessagesOverTime from "./Graphcomponents/MessagesOverTime/MessagesOverTime";
 import NumberOfWords from "./Graphcomponents/NumberOfWords/NumberOfWords";
 import AvgWordsPerMessage from "./Graphcomponents/AvgWordsPerMessage/AvgWordsPerMessage";
+import NumberOfChars from "./Graphcomponents/NumberOfChars/NumberOfChars";
 
 function App() {
     const { setLoading, loading, addSuccess, addError } = useFeedbackMachine();
@@ -180,7 +180,7 @@ function App() {
 
                 {chatData && chatDataWithoutMedia && (
                     <>
-                        {/* <Typography textAlign="center" variant="h2" gutterBottom>
+                        <Typography textAlign="center" variant="h2" gutterBottom>
                             Messages
                         </Typography>
 
@@ -226,7 +226,7 @@ function App() {
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
 
-                        <Divider sx={{ mt: "60px", mb: "60px" }} /> */}
+                        <Divider sx={{ mt: "60px", mb: "60px" }} />
 
                         <Typography textAlign="center" variant="h2" gutterBottom>
                             Words
@@ -271,7 +271,8 @@ function App() {
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
-                        <Divider sx={{ mt: "30px", mb: "30px" }} />
+
+                        <Divider sx={{ mt: "60px", mb: "60px" }} />
 
                         <Typography textAlign="center" variant="h2" gutterBottom>
                             Characters
@@ -285,34 +286,18 @@ function App() {
                             deeper.
                         </Typography>
                         <Typography mr="20px" ml="20px" textAlign="justify" gutterBottom>
-                            In this section we will look at the number of characters that were sent, who
-                            sent how many characters, what were the most used characters and so on.
+                            In this section we will look at the number of characters that were sent,
+                            who sent how many characters, what were the most used characters and so
+                            on.
                         </Typography>
                         <Typography mr="20px" ml="20px" textAlign="justify" gutterBottom>
-                            We will also look at emojis, which are a special kind of character. We will
-                            look at the number of emojis that were sent, who sent how many emojis, what
-                            were the most used emojis and so on.
+                            We will also look at emojis, which are a special kind of character. We
+                            will look at the number of emojis that were sent, who sent how many
+                            emojis, what were the most used emojis and so on.
                         </Typography>
-
-                        {/* <Typography textAlign="center" variant="h2" gutterBottom>
-                            TO BE PRETTIFIED
-                        </Typography>
-                        {[
-                            "This section is for the graphs that aren't finished yet.",
-                            "Maybe the data is not calculated (very) correctly or the description is missing/incorrect. Altough the data is not correct, it is still interesting to look at the graphs and see what they are supposed to show.",
-                        ].map((i) => (
-                            <Typography
-                                sx={{ mr: "20px", ml: "20px" }}
-                                textAlign="justify"
-                                variant="body1"
-                                gutterBottom
-                            >
-                                {i}
-                            </Typography>
-                        ))}
                         <Divider sx={{ mt: "30px", mb: "30px" }} />
 
-                        <Introduction
+                        <NumberOfChars
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
                         />
@@ -327,7 +312,8 @@ function App() {
                         <TopEmojisUsed
                             chatData={chatData}
                             chatDataWithoutMedia={chatDataWithoutMedia}
-                        /> */}
+                        />
+                        {/* <Divider sx={{ mt: "30px", mb: "30px" }} /> */}
                     </>
                 )}
             </Box>

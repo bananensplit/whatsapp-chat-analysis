@@ -20,7 +20,7 @@ function TopCharactersUsed({ chatData, chatDataWithoutMedia }) {
         []
     );
 
-    const [convertedData, setConvertedData] = useState([]);
+    const [charCounts, setCharCounts] = useState([]);
     const [senders, setSenders] = useState([]);
 
     useEffect(() => {
@@ -33,7 +33,7 @@ function TopCharactersUsed({ chatData, chatDataWithoutMedia }) {
     useEffect(() => {
         worker.onmessage = (message) => {
             const result = message.data;
-            setConvertedData(result.charCounts);
+            setCharCounts(result.charCounts);
             setSenders(result.senders);
             setLoading(false);
         };
@@ -44,13 +44,11 @@ function TopCharactersUsed({ chatData, chatDataWithoutMedia }) {
             <Typography align="center" variant="h3" gutterBottom>
                 Top 50 characters used
             </Typography>
-            <Typography
-                sx={{ mr: "20px", ml: "20px", textAlign: "justify" }}
-                variant="body1"
-                gutterBottom
-            >
+            
+            <Typography mr="20px" ml="20px" textAlign="justify" variant="body1" gutterBottom>
                 TBD
             </Typography>
+            
             <Box
                 sx={{
                     height: "1200px",
@@ -59,7 +57,7 @@ function TopCharactersUsed({ chatData, chatDataWithoutMedia }) {
                 fontFamily={"Arial"}
             >
                 <ResponsiveBar
-                    data={convertedData}
+                    data={charCounts}
                     keys={senders}
                     indexBy="char"
                     layout="horizontal"
