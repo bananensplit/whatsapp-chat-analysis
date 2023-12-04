@@ -39,17 +39,17 @@ function App() {
 
     const [chatData, setChatData] = useState("");
     const [chatDataWithoutMedia, setChatDataWithoutMedia] = useState("");
-    // const [file, setFile] = useState(null);
-    const [file, setFile] = useState("null");
+    const [file, setFile] = useState(null);
+    // const [file, setFile] = useState("null");
 
     useEffect(() => runAnalysis(), []);
 
     function runAnalysis() {
         if (file === null) return;
         setLoading(true);
-        fetch("tempdata.txt")
-            .then((r) => r.text())
-            // file.text()
+        // fetch("tempdata.txt")
+            // .then((r) => r.text())
+            file.text()
             .then((text) => worker.postMessage(text))
             .catch((error) => console.error(error));
     }
