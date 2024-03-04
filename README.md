@@ -56,7 +56,7 @@ npm install
 npm run build
 ```
 
-You should end up with a `dist` directory containing the built project. You can then host this directory on a webserver of your choice. It is important to note that the project is configured to be hosted in a subdirectory (called `whatsapp-chat-analysis`) of the root of the webserver. You can change this behaviour by editing the the `base` parameter in the `vite.config.js` file. If you want to host the project at the root of the webserver you can set the `base` parameter to `"/"`.
+You should end up with a `dist` directory containing the built project. You can then host this directory on a webserver of your choice. It is important to note that the project is configured to be hosted in a subdirectory (called `whatsapp-chat-analysis`) of the root of the webserver. You can change this behavior by editing the `base` parameter in the `vite.config.js` file. If you want to host the project at the root of the webserver you can set the `base` parameter to `"/"`.
 
 
 
