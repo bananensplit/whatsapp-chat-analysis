@@ -47,7 +47,7 @@ With larger chatfiles there might be a noticeable delay between clicking the "Ru
 
 ## Build
 
-To build this project you need to have [Node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/) installed. Once you have installed these you can build the project by running the following commands in your terminal.
+To build this project on your own you need to have [Node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/) installed. Once you have installed these you can build the project by running the following commands in your terminal.
 
 ```bash
 git pull https://github.com/bananensplit/whatsapp-chat-analysis.git
